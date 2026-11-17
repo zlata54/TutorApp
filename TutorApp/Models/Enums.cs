@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 
 namespace TutorApp.Models
 {
-        public enum LessonStatus
-        {
-            Planned,    
-            Completed, 
-            Cancelled  
-        }
-    
+    /// <summary>
+    /// Перечисление возможных статусов занятия
+    /// </summary>
+    public enum LessonStatus
+    {
+        /// <summary>Занятие запланировано, но еще не проведено</summary>
+        Planned,
+
+        /// <summary>Занятие проведено, выставлена оценка</summary>
+        Completed,
+
+        /// <summary>Занятие отменено</summary>
+        Cancelled
+    }
 }

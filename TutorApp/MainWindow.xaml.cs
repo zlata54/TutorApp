@@ -16,13 +16,29 @@ using System.Windows.Shapes;
 namespace TutorApp
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для главного окна приложения
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// Инициализирует новое Главное окно и проверяет подключение к базе данных
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
+
+            try
+            {
+                using (var db = new AppDbContext())
+                {
+                    var count = db.Students.Count();
+                    MessageBox.Show($"База данных готова! Учеников: {count}");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
         }
     }
 }
