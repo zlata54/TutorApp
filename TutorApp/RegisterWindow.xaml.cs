@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TutorApp.Models;
 
 namespace TutorApp
 {
@@ -33,7 +34,54 @@ namespace TutorApp
         /// </summary>
         private void btnRegister_Click(object sender, RoutedEventArgs e)
         {
-            // Логика будет добавлена позже
+            string login = txtNewLogin.Text.Trim();
+            string pass = txtNewPassword.Password;
+            string confirm = txtConfirmPassword.Password;
+
+            // Валидация (проверка ввода)
+            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(pass))
+            {
+                MessageBox.Show("Заполните все поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (pass != confirm)
+            {
+                MessageBox.Show("Пароли не совпадают!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (pass.Length < 4)
+            {
+                MessageBox.Show("Пароль должен быть не менее 4 символов!", "Ошибка");
+                return;
+            }
+
+            using (var db = new AppDbContext())
+            {
+                // Проверяем, нет ли уже такого логина
+                if (db.Users.Any(u => u.Login == login))
+                {
+                    MessageBox.Show("Такой логин уже существует!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Создаем нового пользователя
+                var newUser = new User
+                {
+                    Login = login,
+                    PasswordHash = pass 
+                };
+
+                db.Users.Add(newUser);
+                db.SaveChanges();
+
+                MessageBox.Show("Регистрация успешна! Теперь войдите в систему.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                LoginWindow loginWin = new LoginWindow();
+                loginWin.Show();
+                this.Close();
+            }
         }
 
         /// <summary>

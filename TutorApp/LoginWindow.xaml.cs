@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TutorApp.Models;
 
 namespace TutorApp
 {
@@ -33,7 +34,36 @@ namespace TutorApp
         /// </summary>
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            // Логика будет добавлена позже
+            string login = txtLogin.Text.Trim();
+            string password = txtPassword.Password;
+
+            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Введите логин и пароль!", "Ошибка");
+                return;
+            }
+
+            using (var db = new AppDbContext())
+            {
+                // Ищем пользователя в базе
+                var user = db.Users.FirstOrDefault(u => u.Login == login && u.PasswordHash == password);
+
+                if (user != null)
+                {
+                    // Запоминаем, кто вошел
+                    CurrentUser.Id = user.Id;
+                    CurrentUser.Login = user.Login;
+
+                    // Открываем главное окно
+                    MainWindow main = new MainWindow();
+                    main.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
         /// <summary>
