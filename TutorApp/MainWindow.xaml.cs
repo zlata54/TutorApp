@@ -27,6 +27,7 @@ namespace TutorApp
         public MainWindow()
         {
             InitializeComponent();
+            LoadStudents();
         }
 
         private void MenuBackup_Click(object sender, RoutedEventArgs e) { /* Бэкап */ }
@@ -37,7 +38,16 @@ namespace TutorApp
         private void MenuAbout_Click(object sender, RoutedEventArgs e) { /* О программе */ }
 
         private void SearchStudent_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) { /* Поиск */ }
-        private void AddStudent_Click(object sender, RoutedEventArgs e) { /* Добавление */ }
+        private void AddStudent_Click(object sender, RoutedEventArgs e)
+        {
+            // Создаем окно добавления
+            AddStudentWindow addWindow = new AddStudentWindow();
+
+            if (addWindow.ShowDialog() == true)
+            {
+                LoadStudents();
+            }
+        }
         private void EditStudent_Click(object sender, RoutedEventArgs e) { /* Редактирование */ }
         private void DeleteStudent_Click(object sender, RoutedEventArgs e) { /* Удаление */ }
 
@@ -47,5 +57,18 @@ namespace TutorApp
 
         private void AddPayment_Click(object sender, RoutedEventArgs e) { /* Внести оплату */ }
         private void ShowStudentReport_Click(object sender, RoutedEventArgs e) { /* Отчет по ученику */ }
+
+        /// <summary>
+        /// Загружает список учеников текущего пользователя из базы данных в таблицу
+        /// </summary>
+        private void LoadStudents()
+        {
+            using (var db = new AppDbContext())
+            {
+                // Берем учеников только текущего репетитора
+                var myStudents = db.Students.Where(s => s.UserId == CurrentUser.Id).ToList();
+                StudentsDataGrid.ItemsSource = myStudents;
+            }
+        }
     }
 }

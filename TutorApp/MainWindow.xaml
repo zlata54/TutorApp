@@ -1,9 +1,110 @@
 ﻿<Window x:Class="TutorApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Личный кабинет репетитора" Height="750" Width="1100"
-        WindowStartupLocation="CenterScreen"
-        Background="#F4F1EA" FontFamily="Segoe UI">
+        Title="Личный кабинет репетитора" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Background="#F4F1EA" FontFamily="Segoe UI"
+        BorderBrush="#3E2723" BorderThickness="2">
+
+    <Window.Resources>
+        <Style TargetType="Menu">
+            <Setter Property="Background" Value="#3E2723"/>
+        </Style>
+
+        <Style TargetType="MenuItem">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#3E2723"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,5"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#5D6D8A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderBrush" Value="#3E2723"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3E2723"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#D9534F"/>
+            <Setter Property="BorderBrush" Value="#B52B27"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#B52B27"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" Background="#E8E0D5" BorderThickness="1,1,1,0" BorderBrush="#3E2723"
+                                Padding="25,10" Margin="0,0,5,0" CornerRadius="6,6,0,0">
+                            <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                                <Setter TargetName="Border" Property="BorderThickness" Value="2,2,2,0"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#3E2723"/>
+                                <Setter Property="Foreground" Value="#3E2723"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter Property="Foreground" Value="#3E2723"/>
+                                <Setter Property="FontWeight" Value="Normal"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#3E2723"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F4F1EA"/>
+            <Setter Property="RowHeight" Value="40"/>
+            <Setter Property="ColumnHeaderHeight" Value="45"/>
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#3E2723"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Padding" Value="15,0"/>
+                        <Setter Property="BorderBrush" Value="#3E2723"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -11,26 +112,104 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Menu Grid.Row="0" Background="#3E2723" Foreground="White">
+        <Menu Grid.Row="0" Padding="15,10">
             <MenuItem Header="Файл">
+                <MenuItem Header="Создать резервную копию" Click="MenuBackup_Click"/>
+                <MenuItem Header="Восстановить" Click="MenuRestore_Click"/>
+                <Separator/>
                 <MenuItem Header="Выход" Click="MenuExit_Click"/>
+            </MenuItem>
+            <MenuItem Header="Отчеты">
+                <MenuItem Header="Успеваемость" Click="MenuReportGrades_Click"/>
+                <MenuItem Header="Задолженности" Click="MenuReportDebt_Click"/>
             </MenuItem>
             <MenuItem Header="Справка">
                 <MenuItem Header="О программе" Click="MenuAbout_Click"/>
             </MenuItem>
         </Menu>
 
-        <TabControl Grid.Row="1" Margin="10">
+        <TabControl Grid.Row="1" Margin="20,20,20,20" Background="Transparent" BorderThickness="0">
+
             <TabItem Header="Ученики">
-                <Grid Margin="10">
-                    <DataGrid Name="StudentsDataGrid" AutoGenerateColumns="True" IsReadOnly="True"/>
-                </Grid>
+                <Border Background="White" BorderBrush="#3E2723" BorderThickness="2" CornerRadius="0,10,10,10" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Background="#F4F1EA" BorderBrush="#3E2723" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="Bold" Foreground="#3E2723"/>
+                                <TextBox Width="250" Height="35" Margin="0,0,30,0" VerticalContentAlignment="Center" Padding="5,0" BorderBrush="#3E2723" BorderThickness="1"/>
+                                <Button Content="Добавить" Click="AddStudent_Click"/>
+                                <Button Content="Редактировать" Click="EditStudent_Click"/>
+                                <Button Content="Удалить" Style="{StaticResource DangerButton}" Click="DeleteStudent_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <DataGrid Name="StudentsDataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" 
+          CanUserAddRows="False" HeadersVisibility="Column">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="*"/>
+                                <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="*"/>
+                                <DataGridTextColumn Header="Класс" Binding="{Binding GradeLevel}" Width="80"/>
+                                <DataGridTextColumn Header="Предмет" Binding="{Binding Subject}" Width="*"/>
+                                <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
             </TabItem>
+
             <TabItem Header="Расписание">
-                <TextBlock Text="Расписание" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Border Background="White" BorderBrush="#3E2723" BorderThickness="2" CornerRadius="0,10,10,10" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Background="#F4F1EA" BorderBrush="#3E2723" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Дата:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="Bold" Foreground="#3E2723"/>
+                                <DatePicker Width="180" Height="35" Margin="0,0,30,0"/>
+                                <Button Content="Добавить занятие" Click="AddLesson_Click"/>
+                                <Button Content="Проведено" Click="CompleteLesson_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <DataGrid Name="LessonsDataGrid" Grid.Row="1" AutoGenerateColumns="True" IsReadOnly="True"/>
+                    </Grid>
+                </Border>
             </TabItem>
+
             <TabItem Header="Финансы">
-                <TextBlock Text="Финансы" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Border Background="White" BorderBrush="#3E2723" BorderThickness="2" CornerRadius="0,10,10,10" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Background="#F4F1EA" BorderBrush="#3E2723" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Общая задолженность:" FontSize="16" FontWeight="Bold" Foreground="#3E2723" VerticalAlignment="Center"/>
+                                <TextBlock Name="TotalDebtText" Text="0 руб." FontSize="22" FontWeight="Bold" Foreground="#D9534F" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="1" Background="#F4F1EA" BorderBrush="#3E2723" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Внести оплату" Click="AddPayment_Click"/>
+                                <Button Content="Отчет по ученику" Click="ShowStudentReport_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <DataGrid Name="PaymentsDataGrid" Grid.Row="2" AutoGenerateColumns="True" IsReadOnly="True"/>
+                    </Grid>
+                </Border>
             </TabItem>
         </TabControl>
     </Grid>
