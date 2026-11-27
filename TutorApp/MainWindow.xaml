@@ -4,7 +4,8 @@
         Title="Личный кабинет репетитора" Height="800" Width="1200"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
         Background="#F4F1EA" FontFamily="Segoe UI"
-        BorderBrush="#3E2723" BorderThickness="2">
+        BorderBrush="#3E2723" BorderThickness="2"
+        Loaded="Window_Loaded">
 
     <Window.Resources>
         <Style TargetType="Menu">
@@ -167,19 +168,47 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" Background="#F4F1EA" BorderBrush="#3E2723" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Дата:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="Bold" Foreground="#3E2723"/>
-                                <DatePicker Width="180" Height="35" Margin="0,0,30,0"/>
+                                <DatePicker Name="ScheduleDatePicker" Width="150" Height="30" Margin="0,0,20,0"/>
+
+                                <TextBlock Text="Статус:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="Bold" Foreground="#3E2723"/>
+                                <ComboBox Name="StatusFilterCombo" Width="150" Height="30" Margin="0,0,20,0" SelectionChanged="StatusFilterCombo_SelectionChanged" SelectedIndex="0">
+                                    <ComboBoxItem Content="Все занятия"/>
+                                    <ComboBoxItem Content="Запланированные"/>
+                                    <ComboBoxItem Content="Проведенные"/>
+                                    <ComboBoxItem Content="Отмененные"/>
+                                </ComboBox>
+
                                 <Button Content="Добавить занятие" Click="AddLesson_Click"/>
-                                <Button Content="Проведено" Click="CompleteLesson_Click"/>
                             </StackPanel>
                         </Border>
 
-                        <DataGrid Name="LessonsDataGrid" Grid.Row="1" AutoGenerateColumns="True" IsReadOnly="True"/>
+                        <Border Grid.Row="1" Background="#F4F1EA" BorderBrush="#3E2723" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Редактировать" Click="EditLesson_Click" Margin="0,0,10,0"/>
+                                <Button Content="Изменить статус / Оценить" Click="ChangeLessonStatus_Click" Margin="0,0,10,0"/>
+                                <Button Content="Удалить" Background="#D9534F" Click="DeleteLesson_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <DataGrid Name="LessonsDataGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" 
+                                  CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat='dd.MM.yyyy HH:mm'}" Width="150"/>
+                                <DataGridTextColumn Header="Ученик" Binding="{Binding Student.LastName}" Width="*"/>
+                                <DataGridTextColumn Header="Тема" Binding="{Binding Topic}" Width="*"/>
+                                <DataGridTextColumn Header="Оценка" Binding="{Binding Grade}" Width="80"/>
+                                <DataGridTextColumn Header="ДЗ" Binding="{Binding Homework}" Width="*"/>
+                                <DataGridTextColumn Header="Длительность" Binding="{Binding Duration}" Width="Auto" MinWidth="130"/>
+                                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="Auto" MinWidth="130"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
                 </Border>
             </TabItem>

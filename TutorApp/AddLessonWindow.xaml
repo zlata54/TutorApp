@@ -1,0 +1,56 @@
+﻿<Window x:Class="TutorApp.AddLessonWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Добавление занятия" Height="550" Width="400"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="#F4F1EA" FontFamily="Segoe UI"
+        BorderBrush="#3E2723" BorderThickness="2">
+
+    <Grid Margin="20">
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="Новое занятие" FontSize="22" FontWeight="Bold" Foreground="#3E2723" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+            <TextBlock Text="Ученик:" FontWeight="Bold" Foreground="#3E2723"/>
+            <ComboBox Name="cbStudents" Height="30" Margin="0,5,0,10" BorderBrush="#3E2723" BorderThickness="1"
+                      DisplayMemberPath="LastName" SelectedValuePath="Id" Foreground="#3E2723" VerticalContentAlignment="Center"/>
+
+            <TextBlock Text="Дата и время:" FontWeight="Bold" Foreground="#3E2723"/>
+            <DatePicker Name="dpDate" Height="30" Margin="0,5,0,10" BorderBrush="#3E2723" BorderThickness="1" VerticalContentAlignment="Center"/>
+
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Name="txtHours" Grid.Column="0" Height="30" Text="14" VerticalContentAlignment="Center" Padding="5,0" BorderBrush="#3E2723" BorderThickness="1"/>
+                <TextBlock Grid.Column="1" Text=":" VerticalAlignment="Center" Margin="5,0" FontWeight="Bold"/>
+                <TextBox Name="txtMinutes" Grid.Column="2" Height="30" Text="00" VerticalContentAlignment="Center" Padding="5,0" BorderBrush="#3E2723" BorderThickness="1"/>
+            </Grid>
+
+            <TextBlock Text="Длительность (мин):" FontWeight="Bold" Foreground="#3E2723"/>
+            <TextBox Name="txtDuration" Height="30" Margin="0,5,0,10" Text="60" VerticalContentAlignment="Center" Padding="5,0" BorderBrush="#3E2723" BorderThickness="1"/>
+
+            <TextBlock Text="Тема занятия:" FontWeight="Bold" Foreground="#3E2723"/>
+            <TextBox Name="txtTopic" Height="30" Margin="0,5,0,20" VerticalContentAlignment="Center" Padding="5,0" BorderBrush="#3E2723" BorderThickness="1"/>
+
+            <Button Content="Сохранить" Height="40" Background="#8CA0C4" Foreground="White" 
+                    FontWeight="Bold" FontSize="14" Cursor="Hand" Click="SaveButton_Click"
+                    BorderBrush="#3E2723" BorderThickness="2">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#3E2723"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>
